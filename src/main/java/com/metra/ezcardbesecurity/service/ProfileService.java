@@ -4,7 +4,11 @@ import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.respository.ProfileRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -12,9 +16,11 @@ import java.util.List;
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
+    private final FtpService ftpService;
 
-    public ProfileService(ProfileRepository profileRepository) {
+    public ProfileService(ProfileRepository profileRepository, FtpService ftpService) {
         this.profileRepository = profileRepository;
+        this.ftpService = ftpService;
     }
 
     public Profile findByUsername(String username) {
@@ -123,6 +129,60 @@ public class ProfileService {
         } else {
             log.info("Companies for user {} retrieved", name);
             return profile.getCompanies();
+        }
+    }
+
+
+    public List<MediaContainer> updateMedia(MultipartFile[] files, String name, String type) {
+        Profile profile = profileRepository.findByUsername(name).orElse(null);
+        if (profile == null) {
+            log.error("Profile for user {} does not exist", name);
+            return null;
+        } else {
+
+            try {
+                List<MediaContainer> mediaContainerResponse = new ArrayList<>();
+                List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
+
+                for (int i = 0; i < files.length; i++) {
+                    MediaContainer mediaContainer = new MediaContainer();
+                    mediaContainer.setFileName(files[i].getOriginalFilename());
+                    mediaContainer.setFileType(files[i].getContentType());
+                    mediaContainer.setFileLink(links.get(i));
+                }
+
+                profile.setGallery(mediaContainerResponse);
+                log.info("Gallery for user {} updated", name);
+                profileRepository.save(profile);
+                return profile.getGallery();
+            } catch (Exception e) {
+                log.error("Error updating gallery for user {}", name);
+                return Collections.emptyList();
+            }
+        }
+    }
+
+    public List<MediaContainer> getMedia(String name, String type) {
+        Profile profile = profileRepository.findByUsername(name).orElse(null);
+        if (profile == null) {
+            log.error("Profile for user {} does not exist", name);
+            return null;
+        } else {
+            switch (type) {
+                case "gallery":
+                    log.info("Gallery for user {} retrieved", name);
+                    return profile.getGallery();
+                case "presentation":
+                    log.info("Presentation for user {} retrieved", name);
+                    return profile.getPresentation();
+                case "partner":
+                    log.info("Partner for user {} retrieved", name);
+                    return profile.getPartner();
+                default:
+                    log.error("Invalid media type {}", type);
+                    return null;
+            }
+
         }
     }
 }

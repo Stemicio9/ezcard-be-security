@@ -25,6 +25,9 @@ public class Profile {
     private List<SocialContainer> socials;
     private List<ContactContainer> contacts;
     private List<CompanyContainer> companies;
+    private List<MediaContainer> gallery;
+    private List<MediaContainer> presentation;
+    private List<MediaContainer> partner;
 
 
 }
