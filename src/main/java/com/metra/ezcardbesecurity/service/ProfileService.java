@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,10 +20,6 @@ public class ProfileService {
     public ProfileService(ProfileRepository profileRepository, FtpService ftpService) {
         this.profileRepository = profileRepository;
         this.ftpService = ftpService;
-    }
-
-    public Profile findByUsername(String username) {
-        return profileRepository.findByUsername(username).orElse(null);
     }
 
     public Profile insertProfile(String username) {
@@ -149,6 +144,7 @@ public class ProfileService {
                     mediaContainer.setFileName(files[i].getOriginalFilename());
                     mediaContainer.setFileType(files[i].getContentType());
                     mediaContainer.setFileLink(links.get(i));
+                    mediaContainerResponse.add(mediaContainer);
                 }
 
                 profile.setGallery(mediaContainerResponse);

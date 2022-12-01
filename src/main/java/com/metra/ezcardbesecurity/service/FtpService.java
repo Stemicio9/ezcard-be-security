@@ -3,15 +3,18 @@ package com.metra.ezcardbesecurity.service;
 import com.metra.ezcardbesecurity.commons.FtpClient;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 @Service
 public class FtpService {
@@ -48,13 +51,27 @@ public class FtpService {
             for (MultipartFile multipartFile : file) {
                 String path = Paths.get(ftpBaseUrl, partialFilePath, multipartFile.getOriginalFilename()).toString();
                 ftpClient.getFtp().storeFile(path, multipartFile.getInputStream());
-                uploadedLinks.add(String.valueOf(Paths.get(ftpServer, path)));
+                uploadedLinks.add(String.valueOf(Paths.get(path)));
             }
             ftpClient.close();
             return uploadedLinks;
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    public byte[] serveFile(String link){
+        FtpClient ftpClient = new FtpClient(ftpServer, Integer.parseInt(ftpPort), ftpUser, ftpPassword);
+        try {
+            ftpClient.open();
+            InputStream is = ftpClient.getFtp().retrieveFileStream(link);
+            byte[] result = new byte[is.available()];
+            IOUtils.readFully(is, result);
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

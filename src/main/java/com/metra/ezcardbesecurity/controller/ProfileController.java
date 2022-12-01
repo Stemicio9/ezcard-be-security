@@ -1,6 +1,7 @@
 package com.metra.ezcardbesecurity.controller;
 
 import com.metra.ezcardbesecurity.entity.profile.*;
+import com.metra.ezcardbesecurity.service.FtpService;
 import com.metra.ezcardbesecurity.service.ProfileService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,11 @@ public class ProfileController {
 
 
     private final ProfileService profileService;
+    private final FtpService ftpService;
 
-    public ProfileController(ProfileService profileService) {
+    public ProfileController(ProfileService profileService, FtpService ftpService) {
         this.profileService = profileService;
+        this.ftpService = ftpService;
     }
 
     //TODO presentation, gallery, partner
@@ -87,6 +90,11 @@ public class ProfileController {
     @GetMapping(value = "/get/presentation")
     public ResponseEntity getPresentation(Authentication authentication) {
         return ResponseEntity.ok(profileService.getMedia(authentication.getName(), "presentation"));
+    }
+
+    @PostMapping(value = "/get/file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity serveFile(@RequestBody MediaContainer mediaContainer) {
+        return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getFileLink()));
     }
 
 
