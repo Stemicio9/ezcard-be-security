@@ -129,32 +129,35 @@ public class ProfileService {
 
 
     public List<MediaContainer> updateMedia(MultipartFile[] files, String username, String type) {
+
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
             log.error(profileNotFoundErrorMessage(username));
             return Collections.emptyList();
         } else {
-
-            try {
-                List<MediaContainer> mediaContainerResponse = new ArrayList<>();
-                List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
-
-                for (int i = 0; i < files.length; i++) {
-                    MediaContainer mediaContainer = new MediaContainer();
-                    mediaContainer.setFileName(files[i].getOriginalFilename());
-                    mediaContainer.setFileType(files[i].getContentType());
-                    mediaContainer.setFileLink(links.get(i));
-                    mediaContainerResponse.add(mediaContainer);
+            List<MediaContainer> mediaContainerResponse = new ArrayList<>();
+            if (files != null && files.length > 0) {
+                try {
+                    List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
+                    for (int i = 0; i < files.length; i++) {
+                        MediaContainer mediaContainer = new MediaContainer();
+                        mediaContainer.setFileName(files[i].getOriginalFilename());
+                        mediaContainer.setFileType(files[i].getContentType());
+                        mediaContainer.setFileLink(links.get(i));
+                        mediaContainerResponse.add(mediaContainer);
+                    }
+                } catch (Exception e) {
+                    log.error("Error updating gallery for user {}", username);
+                    profile.setGallery(mediaContainerResponse);
+                    profileRepository.save(profile);
+                    return Collections.emptyList();
                 }
-
-                profile.setGallery(mediaContainerResponse);
-                log.info("Gallery for user {} updated", username);
-                profileRepository.save(profile);
-                return profile.getGallery();
-            } catch (Exception e) {
-                log.error("Error updating gallery for user {}", username);
-                return Collections.emptyList();
             }
+            profile.setGallery(mediaContainerResponse);
+            log.info("Gallery for user {} updated", username);
+            profileRepository.save(profile);
+            return profile.getGallery();
+
         }
     }
 
@@ -182,7 +185,7 @@ public class ProfileService {
         }
     }
 
-    private String profileNotFoundErrorMessage(String username){
+    private String profileNotFoundErrorMessage(String username) {
         return "Profile for user " + username + " does not exist";
     }
 }

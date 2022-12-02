@@ -1,6 +1,7 @@
 package com.metra.ezcardbesecurity.service;
 
 import com.metra.ezcardbesecurity.commons.FtpClient;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+@Slf4j
 @Service
 public class FtpService {
 
@@ -39,6 +40,10 @@ public class FtpService {
 
 
     public List<String> uploadFiles(MultipartFile[] file, String id, String domain) {
+        if(file.length == 0) {
+            log.error("No files to upload");
+            return Collections.emptyList();
+        }
         FtpClient ftpClient = new FtpClient(ftpServer, Integer.parseInt(ftpPort), ftpUser, ftpPassword);
         List<String> uploadedLinks = new ArrayList<>();
         try {

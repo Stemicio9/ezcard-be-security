@@ -45,17 +45,17 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/update/gallery", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateGallery(Authentication authentication, @RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<?> updateGallery(Authentication authentication, @RequestParam(value = "files", required = false) MultipartFile[] files) {
         return ResponseEntity.ok(profileService.updateMedia(files, authentication.getName(), "gallery"));
     }
 
     @PostMapping(value = "/update/partner", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updatePartner(Authentication authentication, @RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<?> updatePartner(Authentication authentication, @RequestParam(value = "files", required = false) MultipartFile[] files) {
         return ResponseEntity.ok(profileService.updateMedia(files, authentication.getName(), "partner"));
     }
 
     @PostMapping(value = "/update/presentation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updatePresentation(Authentication authentication, @RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<?> updatePresentation(Authentication authentication, @RequestParam(value = "files", required = false) MultipartFile[] files) {
         return ResponseEntity.ok(profileService.updateMedia(files, authentication.getName(), "presentation"));
     }
 
