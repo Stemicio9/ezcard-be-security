@@ -39,12 +39,14 @@ public class UserEzService {
         log.info("Profile for user {} created", username);
     }
 
-    private Object create(JwtAuthenticationRequest request) {
+    private UserEz create(JwtAuthenticationRequest request) {
         log.info("Registering user {}", request.getUsername());
         UserEz userEz = new UserEz();
         userEz.setUsername(request.getUsername());
         userEz.setPassword(passwordEncoder.encode(request.getPassword()));
-        userEz.setAuthorities(new HashSet<Authority>() {{add(new Authority(AuthorityName.ROLE_USER));}});
+        HashSet<Authority> authorities = new HashSet<>();
+        authorities.add(new Authority(AuthorityName.ROLE_USER));
+        userEz.setAuthorities(authorities);
         userEz.setEnabled(true);
         return userEzRepository.save(userEz);
     }

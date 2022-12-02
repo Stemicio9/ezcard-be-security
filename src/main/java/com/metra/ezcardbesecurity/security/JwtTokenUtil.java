@@ -137,7 +137,6 @@ public class JwtTokenUtil implements Serializable {
         try {
             claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         } catch (Exception e) {
-            //TODO: rendere più esplicativo l'errore
             throw new TokenNotRefreshedException("Error refreshing token", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return claims;
@@ -191,7 +190,6 @@ public class JwtTokenUtil implements Serializable {
             claims.put(CLAIM_KEY_CREATED, new Date());
             refreshedToken = generateToken(claims);
         } catch (Exception e) {
-            //TODO: rendere più esplicativo l'errore
             throw new TokenNotRefreshedException("Error refreshing token", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return refreshedToken;

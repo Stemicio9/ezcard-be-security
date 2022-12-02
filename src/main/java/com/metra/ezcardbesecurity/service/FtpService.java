@@ -35,7 +35,7 @@ public class FtpService {
     private String ftpBaseUrl;
 
 
-    private final String BACKSLASH = "/";
+    private static final String BACKSLASH = "/";
 
 
     public List<String> uploadFiles(MultipartFile[] file, String id, String domain) {
@@ -71,7 +71,7 @@ public class FtpService {
             return result;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return new byte[0];
         }
     }
 
@@ -98,15 +98,19 @@ public class FtpService {
                     dirExists = client.changeWorkingDirectory(dir);
                 }
                 if (!dirExists) {
-                    if (!client.makeDirectory(dir)) {
-                        throw new IOException("Unable to create remote directory '" + dir + "'.  error='" + client.getReplyString() + "'");
-                    }
-                    if (!client.changeWorkingDirectory(dir)) {
-                        throw new IOException("Unable to change into newly created remote directory '" + dir + "'.  error='" + client.getReplyString() + "'");
-                    }
+                    createRemoteDirectory(client, dir);
                 }
             }
         }
         client.changeWorkingDirectory(BACKSLASH);
+    }
+
+    private static void createRemoteDirectory(FTPClient client, String dir) throws IOException {
+        if (!client.makeDirectory(dir)) {
+            throw new IOException("Unable to create remote directory '" + dir + "'.  error='" + client.getReplyString() + "'");
+        }
+        if (!client.changeWorkingDirectory(dir)) {
+            throw new IOException("Unable to change into newly created remote directory '" + dir + "'.  error='" + client.getReplyString() + "'");
+        }
     }
 }

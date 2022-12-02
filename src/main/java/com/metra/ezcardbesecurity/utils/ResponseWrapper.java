@@ -18,12 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Configurable
 public class ResponseWrapper implements Serializable {
 
-    private static ConcurrentHashMap<Class<?>, HttpStatus> existingExceptionToCode = new ConcurrentHashMap<Class<?>, HttpStatus>() {
-        {
-            put(NullPointerException.class, HttpStatus.NOT_FOUND);
-        }
-    };
-
     private String exception = null;
     private String info = null;
     private Object data = null;
@@ -54,12 +48,5 @@ public class ResponseWrapper implements Serializable {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(obj);
         }
-    }
-
-    private String convertStackTraceToString(Exception e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        return sw.toString();
     }
 }

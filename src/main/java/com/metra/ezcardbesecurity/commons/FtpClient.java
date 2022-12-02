@@ -31,7 +31,7 @@ public class FtpClient {
     public void open() throws IOException {
         ftp = new FTPClient();
 
-        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.err)));
 
         ftp.connect(server, port);
         ftp.login(user, password);

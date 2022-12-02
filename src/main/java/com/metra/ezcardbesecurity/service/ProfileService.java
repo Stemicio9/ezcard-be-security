@@ -25,7 +25,7 @@ public class ProfileService {
     public Profile insertProfile(String username) {
         //check if profile exists by username
         if (profileRepository.findByUsername(username).isPresent()) {
-            log.error("Profile for user {} already exists", username);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
             Profile profile = new Profile();
@@ -38,10 +38,10 @@ public class ProfileService {
     public Profile updateProfile(ProfileContainer profileContainer, String username) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", username);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
-            profile.setProfile(profileContainer);
+            profile.setProfileContainer(profileContainer);
             log.info("Profile for user {} updated", username);
             return profileRepository.save(profile);
         }
@@ -50,7 +50,7 @@ public class ProfileService {
     public Profile updateSocial(List<SocialContainer> socialContainerList, String username) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", username);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
             profile.setSocials(socialContainerList);
@@ -62,7 +62,7 @@ public class ProfileService {
     public Profile updateContacts(List<ContactContainer> contactContainerList, String username) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", username);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
             profile.setContacts(contactContainerList);
@@ -74,7 +74,7 @@ public class ProfileService {
     public Profile updateCompanies(List<CompanyContainer> companyContainerList, String username) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", username);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
             profile.setCompanies(companyContainerList);
@@ -83,56 +83,56 @@ public class ProfileService {
         }
     }
 
-    public ProfileContainer getProfile(String name) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public ProfileContainer getProfile(String username) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
+            log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
-            log.info("Profile for user {} retrieved", name);
-            return profile.getProfile();
+            log.info("Profile for user {} retrieved", username);
+            return profile.getProfileContainer();
         }
     }
 
-    public List<SocialContainer> getSocial(String name) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public List<SocialContainer> getSocial(String username) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
-            return null;
+            log.error(profileNotFoundErrorMessage(username));
+            return Collections.emptyList();
         } else {
-            log.info("Social for user {} retrieved", name);
+            log.info("Social for user {} retrieved", username);
             return profile.getSocials();
         }
     }
 
-    public List<ContactContainer> getContacts(String name) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public List<ContactContainer> getContacts(String username) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
-            return null;
+            log.error(profileNotFoundErrorMessage(username));
+            return Collections.emptyList();
         } else {
-            log.info("Contacts for user {} retrieved", name);
+            log.info("Contacts for user {} retrieved", username);
             return profile.getContacts();
         }
     }
 
-    public List<CompanyContainer> getCompanies(String name) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public List<CompanyContainer> getCompanies(String username) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
-            return null;
+            log.error(profileNotFoundErrorMessage(username));
+            return Collections.emptyList();
         } else {
-            log.info("Companies for user {} retrieved", name);
+            log.info("Companies for user {} retrieved", username);
             return profile.getCompanies();
         }
     }
 
 
-    public List<MediaContainer> updateMedia(MultipartFile[] files, String name, String type) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public List<MediaContainer> updateMedia(MultipartFile[] files, String username, String type) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
-            return null;
+            log.error(profileNotFoundErrorMessage(username));
+            return Collections.emptyList();
         } else {
 
             try {
@@ -148,31 +148,31 @@ public class ProfileService {
                 }
 
                 profile.setGallery(mediaContainerResponse);
-                log.info("Gallery for user {} updated", name);
+                log.info("Gallery for user {} updated", username);
                 profileRepository.save(profile);
                 return profile.getGallery();
             } catch (Exception e) {
-                log.error("Error updating gallery for user {}", name);
+                log.error("Error updating gallery for user {}", username);
                 return Collections.emptyList();
             }
         }
     }
 
-    public List<MediaContainer> getMedia(String name, String type) {
-        Profile profile = profileRepository.findByUsername(name).orElse(null);
+    public List<MediaContainer> getMedia(String username, String type) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
-            log.error("Profile for user {} does not exist", name);
-            return null;
+            log.error(profileNotFoundErrorMessage(username));
+            return Collections.emptyList();
         } else {
             switch (type) {
                 case "gallery":
-                    log.info("Gallery for user {} retrieved", name);
+                    log.info("Gallery for user {} retrieved", username);
                     return profile.getGallery();
                 case "presentation":
-                    log.info("Presentation for user {} retrieved", name);
+                    log.info("Presentation for user {} retrieved", username);
                     return profile.getPresentation();
                 case "partner":
-                    log.info("Partner for user {} retrieved", name);
+                    log.info("Partner for user {} retrieved", username);
                     return profile.getPartner();
                 default:
                     log.error("Invalid media type {}", type);
@@ -180,5 +180,9 @@ public class ProfileService {
             }
 
         }
+    }
+
+    private String profileNotFoundErrorMessage(String username){
+        return "Profile for user " + username + " does not exist";
     }
 }
