@@ -90,7 +90,7 @@ public class ProfileService {
             return null;
         } else {
             log.info("Profile for user {} retrieved", username);
-            return profile.getProfileContainer();
+            return profile.getProfileContainer() != null ? profile.getProfileContainer() : new ProfileContainer();
         }
     }
 

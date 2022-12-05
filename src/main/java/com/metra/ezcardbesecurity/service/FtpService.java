@@ -71,7 +71,7 @@ public class FtpService {
         try {
             ftpClient.open();
             InputStream is = ftpClient.getFtp().retrieveFileStream(link);
-            byte[] result = new byte[is.available()];
+                byte[] result = new byte[is.available()];
             IOUtils.readFully(is, result);
             return result;
         } catch (IOException e) {

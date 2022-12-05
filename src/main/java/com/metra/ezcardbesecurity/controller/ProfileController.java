@@ -94,7 +94,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getMedia(authentication.getName(), "presentation"));
     }
 
-    @PostMapping(value = "/get/file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(value = "/get/file")
     public ResponseEntity<?> serveFile(@RequestBody MediaContainer mediaContainer) {
         return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getFileLink()));
     }
