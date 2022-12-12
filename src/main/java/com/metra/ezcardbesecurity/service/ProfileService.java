@@ -3,12 +3,14 @@ package com.metra.ezcardbesecurity.service;
 import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.respository.ProfileRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,7 +55,8 @@ public class ProfileService {
             log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
-            profile.setSocials(socialContainerList);
+            List<SocialContainer> socialContainers = socialContainerList.stream().filter(socialContainer -> !(StringUtils.isBlank(socialContainer.getValue()))).collect(Collectors.toList());
+            profile.setSocials(socialContainers);
             log.info("Social for user {} updated", username);
             return profileRepository.save(profile);
         }
@@ -65,7 +68,8 @@ public class ProfileService {
             log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
-            profile.setContacts(contactContainerList);
+            List<ContactContainer> contactContainers = contactContainerList.stream().filter(contactContainer -> !(StringUtils.isBlank(contactContainer.getValue()))).collect(Collectors.toList());
+            profile.setContacts(contactContainers);
             log.info("Contacts for user {} updated", username);
             return profileRepository.save(profile);
         }
