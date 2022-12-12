@@ -10,5 +10,8 @@ import lombok.NoArgsConstructor;
 public class MediaResponse{
 
     private byte[] file;
+    private String name;
+    private String type;
+    private String size;
 
 }

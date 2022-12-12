@@ -35,6 +35,7 @@ public class FtpClient {
 
         ftp.connect(server, port);
         ftp.login(user, password);
+        ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
         ftp.enterLocalPassiveMode();
 
         int reply = ftp.getReplyCode();

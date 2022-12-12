@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MediaContainer {
 
-    private String fileName;
-    private String fileType;
-    private String fileLink;
+    private String name;
+    private String type;
+    private String link;
+    private String size;
 }

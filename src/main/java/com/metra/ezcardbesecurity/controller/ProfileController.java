@@ -96,7 +96,7 @@ public class ProfileController {
 
     @PostMapping(ProfilePaths.SERVE_FILE)
     public ResponseEntity<?> serveFile(@RequestBody MediaContainer mediaContainer) {
-        return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getFileLink()));
+        return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getLink()));
     }
 
     @GetMapping(ProfilePaths.GET_PROFILE_SHOWN)

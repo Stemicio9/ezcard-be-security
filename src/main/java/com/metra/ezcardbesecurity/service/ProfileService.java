@@ -148,9 +148,10 @@ public class ProfileService {
                     List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
                     for (int i = 0; i < files.length; i++) {
                         MediaContainer mediaContainer = new MediaContainer();
-                        mediaContainer.setFileName(files[i].getOriginalFilename());
-                        mediaContainer.setFileType(files[i].getContentType());
-                        mediaContainer.setFileLink(links.get(i));
+                        mediaContainer.setName(files[i].getOriginalFilename());
+                        mediaContainer.setType(files[i].getContentType());
+                        mediaContainer.setSize(String.valueOf(files[i].getSize()));
+                        mediaContainer.setLink(links.get(i));
                         mediaContainerResponse.add(mediaContainer);
                     }
                 } catch (Exception e) {

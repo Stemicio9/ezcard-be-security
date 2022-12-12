@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class FtpService {
 
 
     public List<String> uploadFiles(MultipartFile[] file, String id, String domain) {
-        if(file.length == 0) {
+        if (file.length == 0) {
             log.error("No files to upload");
             return Collections.emptyList();
         }
@@ -66,17 +67,30 @@ public class FtpService {
         }
     }
 
-    public byte[] serveFile(String link){
+    public byte[] serveFile(String link) {
         FtpClient ftpClient = new FtpClient(ftpServer, Integer.parseInt(ftpPort), ftpUser, ftpPassword);
+        InputStream is = null;
         try {
             ftpClient.open();
-            InputStream is = ftpClient.getFtp().retrieveFileStream(link);
-                byte[] result = new byte[is.available()];
+            ftpClient.getFtp().setCharset(StandardCharsets.UTF_8);
+            is = ftpClient.getFtp().retrieveFileStream(link);
+            ftpClient.getFtp().completePendingCommand();
+            byte[] result = new byte[is.available()];
             IOUtils.readFully(is, result);
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             return new byte[0];
+        }
+        finally {
+            try {
+                ftpClient.close();
+                if(is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
