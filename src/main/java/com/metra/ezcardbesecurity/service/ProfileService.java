@@ -192,4 +192,16 @@ public class ProfileService {
     private String profileNotFoundErrorMessage(String username) {
         return "Profile for user " + username + " does not exist";
     }
+
+    public Profile getProfileShown(String id) {
+        //TODO: abbiamo usato l'id al posto di username per la prima ristampa di ezcard
+        Profile profile = profileRepository.findByUsername(id).orElse(null);
+        if (profile == null) {
+            log.error("Profile for user with id {} does not exist", id);
+            return null;
+        } else {
+            log.info("Profile for user with id {} retrieved", id);
+            return profile;
+        }
+    }
 }

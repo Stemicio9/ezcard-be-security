@@ -12,10 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,14 +23,15 @@ public class AuthenticationController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final UserDetailsService userDetailsService;
+    private final UserEzService userEzService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private UserEzService userEzService;
+    public AuthenticationController(JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService, UserEzService userEzService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+        this.userEzService = userEzService;
+    }
 
     @PostMapping(value = "public/login")
     public ResponseEntity<ResponseWrapper> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
