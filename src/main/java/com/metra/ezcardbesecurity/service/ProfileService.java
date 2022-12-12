@@ -81,7 +81,10 @@ public class ProfileService {
             log.error(profileNotFoundErrorMessage(username));
             return null;
         } else {
-            profile.setCompanies(companyContainerList);
+            List<CompanyContainer> companyContainers = companyContainerList.stream().peek(
+                    companyContainer -> companyContainer.setSocials(companyContainer.getSocials().stream().filter(socialContainer -> !(StringUtils.isBlank(socialContainer.getValue()))).collect(Collectors.toList()))
+            ).collect(Collectors.toList());
+            profile.setCompanies(companyContainers);
             log.info("Companies for user {} updated", username);
             return profileRepository.save(profile);
         }
@@ -195,7 +198,7 @@ public class ProfileService {
 
     public Profile getProfileShown(String id) {
         //TODO: abbiamo usato l'id al posto di username per la prima ristampa di ezcard
-        Profile profile = profileRepository.findByUsername(id).orElse(null);
+        Profile profile = profileRepository.findByIdLink(id).orElse(null);
         if (profile == null) {
             log.error("Profile for user with id {} does not exist", id);
             return null;

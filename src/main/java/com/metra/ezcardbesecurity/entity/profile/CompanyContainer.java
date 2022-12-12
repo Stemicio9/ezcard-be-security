@@ -18,5 +18,4 @@ public class CompanyContainer {
     private String codeSDI;
     private String pec;
     private List<SocialContainer> socials;
-
 }

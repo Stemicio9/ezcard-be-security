@@ -21,6 +21,9 @@ public class Profile {
     @Indexed(unique = true)
     private String username;
 
+    @Indexed(unique = true)
+    private String idLink;
+
     private ProfileContainer profileContainer;
     private List<SocialContainer> socials;
     private List<ContactContainer> contacts;
