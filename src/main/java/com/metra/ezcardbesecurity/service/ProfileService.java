@@ -31,7 +31,7 @@ public class ProfileService {
             return null;
         } else {
             Profile profile = new Profile();
-            profile.setUsername(username);
+            profile = initializeProfile(profile, username);
             log.info("Creating profile for user {}", profile.getUsername());
             return profileRepository.insert(profile);
         }
@@ -156,17 +156,34 @@ public class ProfileService {
                     }
                 } catch (Exception e) {
                     log.error("Error updating gallery for user {}", username);
-                    profile.setGallery(mediaContainerResponse);
+                    profile = setMedia(username, type, profile, mediaContainerResponse);
                     profileRepository.save(profile);
                     return Collections.emptyList();
                 }
             }
-            profile.setGallery(mediaContainerResponse);
-            log.info("Gallery for user {} updated", username);
+            profile = setMedia(username, type, profile, mediaContainerResponse);
+            log.info("Updating Media for user {} updated", username);
             profileRepository.save(profile);
             return profile.getGallery();
 
         }
+    }
+
+    private Profile setMedia(String username, String type, Profile profile, List<MediaContainer> mediaContainerResponse) {
+        switch (type) {
+            case "gallery":
+                profile.setGallery(mediaContainerResponse);
+                break;
+            case "presentation":
+                profile.setPresentation(mediaContainerResponse);
+                break;
+            case "partner":
+                profile.setPartner(mediaContainerResponse);
+                break;
+            default:
+                log.error("Error updating media for user {}", username);
+        }
+        return profile;
     }
 
     public List<MediaContainer> getMedia(String username, String type) {
@@ -193,10 +210,6 @@ public class ProfileService {
         }
     }
 
-    private String profileNotFoundErrorMessage(String username) {
-        return "Profile for user " + username + " does not exist";
-    }
-
     public Profile getProfileShown(String id) {
         //TODO: abbiamo usato l'id al posto di username per la prima ristampa di ezcard
         Profile profile = profileRepository.findByIdLink(id).orElse(null);
@@ -207,5 +220,22 @@ public class ProfileService {
             log.info("Profile for user with id {} retrieved", id);
             return profile;
         }
+    }
+
+
+    private String profileNotFoundErrorMessage(String username) {
+        return "Profile for user " + username + " does not exist";
+    }
+
+    private Profile initializeProfile(Profile profile, String username) {
+        profile.setUsername(username);
+        profile.setProfileContainer(new ProfileContainer());
+        profile.setSocials(new ArrayList<>());
+        profile.setContacts(new ArrayList<>());
+        profile.setCompanies(new ArrayList<>());
+        profile.setGallery(new ArrayList<>());
+        profile.setPartner(new ArrayList<>());
+        profile.setPresentation(new ArrayList<>());
+        return profile;
     }
 }

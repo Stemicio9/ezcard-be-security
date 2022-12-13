@@ -4,11 +4,11 @@ import com.metra.ezcardbesecurity.commons.FtpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -52,6 +52,7 @@ public class FtpService {
 
             String partialFilePath = Paths.get(id, domain).toString();
             ftpCreateDirectoryTree(ftpClient.getFtp(), partialFilePath);
+
             cleanDirectory(ftpClient.getFtp(), ftpBaseUrl + BACKSLASH + partialFilePath);
 
             for (MultipartFile multipartFile : file) {
@@ -69,28 +70,33 @@ public class FtpService {
 
     public byte[] serveFile(String link) {
         FtpClient ftpClient = new FtpClient(ftpServer, Integer.parseInt(ftpPort), ftpUser, ftpPassword);
-        InputStream is = null;
         try {
             ftpClient.open();
             ftpClient.getFtp().setCharset(StandardCharsets.UTF_8);
-            is = ftpClient.getFtp().retrieveFileStream(link);
+            InputStream is = ftpClient.getFtp().retrieveFileStream(link);
+
+            BufferedInputStream inbf = new BufferedInputStream(is);
             ftpClient.getFtp().completePendingCommand();
-            byte[] result = new byte[is.available()];
-            IOUtils.readFully(is, result);
+            byte[] buffer = new byte[1024];
+            int readCount;
+            byte[] result = null;
+            int length = 0;
+            while ((readCount = inbf.read(buffer)) > 0) {
+                if (result == null) {
+                    result = new byte[readCount];
+                    System.arraycopy(buffer, 0, result, 0, readCount);
+                } else {
+                    byte[] temp = new byte[length + readCount];
+                    System.arraycopy(result, 0, temp, 0, length);
+                    System.arraycopy(buffer, 0, temp, length, readCount);
+                    result = temp;
+                }
+                length += readCount;
+            }
             return result;
         } catch (IOException e) {
             e.printStackTrace();
             return new byte[0];
-        }
-        finally {
-            try {
-                ftpClient.close();
-                if(is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
