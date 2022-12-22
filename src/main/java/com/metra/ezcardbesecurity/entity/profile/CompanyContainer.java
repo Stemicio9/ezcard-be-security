@@ -14,6 +14,7 @@ public class CompanyContainer {
     private String vatNumber;
     private String address;
     private String phoneNumber;
+    private String website;
     private String email;
     private String codeSDI;
     private String pec;

@@ -12,19 +12,13 @@ public class ProfilePaths {
 
 
     public static final String UPDATE_PROFILE_CONTAINER = UPDATE_PROFILE + "/profile";
-    public static final String UPDATE_PRESENTATION = UPDATE_PROFILE + "/presentation";
-    public static final String UPDATE_PARTNER = UPDATE_PROFILE + "/partner";
-    public static final String UPDATE_GALLERY = UPDATE_PROFILE + "/gallery";
+    public static final String UPDATE_MEDIA = UPDATE_PROFILE + "/media";
     public static final String UPDATE_CONTACTS = UPDATE_PROFILE + "/contacts";
     public static final String UPDATE_COMPANIES = UPDATE_PROFILE + "/companies";
     public static final String UPDATE_SOCIAL = UPDATE_PROFILE + "/social";
 
-
-
     public static final String GET_PROFILE_CONTAINER = GET_PROFILE + "/profile";
-    public static final String GET_PRESENTATION = GET_PROFILE + "/presentation";
-    public static final String GET_PARTNER = GET_PROFILE + "/partner";
-    public static final String GET_GALLERY = GET_PROFILE + "/gallery";
+    public static final String GET_MEDIA = GET_PROFILE + "/media";
     public static final String GET_CONTACTS = GET_PROFILE + "/contacts";
     public static final String GET_COMPANIES = GET_PROFILE + "/companies";
     public static final String GET_SOCIAL = GET_PROFILE + "/social";

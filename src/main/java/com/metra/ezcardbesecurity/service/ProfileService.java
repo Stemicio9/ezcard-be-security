@@ -136,7 +136,6 @@ public class ProfileService {
 
 
     public List<MediaContainer> updateMedia(MultipartFile[] files, String username, String type) {
-
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
             log.error(profileNotFoundErrorMessage(username));
@@ -169,23 +168,6 @@ public class ProfileService {
         }
     }
 
-    private Profile setMedia(String username, String type, Profile profile, List<MediaContainer> mediaContainerResponse) {
-        switch (type) {
-            case "gallery":
-                profile.setGallery(mediaContainerResponse);
-                break;
-            case "presentation":
-                profile.setPresentation(mediaContainerResponse);
-                break;
-            case "partner":
-                profile.setPartner(mediaContainerResponse);
-                break;
-            default:
-                log.error("Error updating media for user {}", username);
-        }
-        return profile;
-    }
-
     public List<MediaContainer> getMedia(String username, String type) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
@@ -202,6 +184,12 @@ public class ProfileService {
                 case "partner":
                     log.info("Partner for user {} retrieved", username);
                     return profile.getPartner();
+                case "profile":
+                    log.info("Profile image for user {} retrieved", username);
+                    return profile.getProfileImage() != null ? Collections.singletonList(profile.getProfileImage()) : Collections.emptyList();
+                case "cover":
+                    log.info("Cover image for user {} retrieved", username);
+                    return profile.getCoverImage() != null ? Collections.singletonList(profile.getCoverImage()) : Collections.emptyList();
                 default:
                     log.error("Invalid media type {}", type);
                     return null;
@@ -238,4 +226,29 @@ public class ProfileService {
         profile.setPresentation(new ArrayList<>());
         return profile;
     }
+
+    private Profile setMedia(String username, String type, Profile profile, List<MediaContainer> mediaContainerResponse) {
+        switch (type) {
+            case "gallery":
+                profile.setGallery(mediaContainerResponse);
+                break;
+            case "presentation":
+                profile.setPresentation(mediaContainerResponse);
+                break;
+            case "partner":
+                profile.setPartner(mediaContainerResponse);
+                break;
+            case "profile":
+                profile.setProfileImage(mediaContainerResponse.get(0));
+                break;
+            case "cover":
+                profile.setCoverImage(mediaContainerResponse.get(0));
+                break;
+            default:
+                log.error("Error updating media for user {}", username);
+        }
+        return profile;
+    }
+
+
 }

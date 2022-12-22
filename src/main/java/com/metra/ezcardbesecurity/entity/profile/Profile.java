@@ -24,6 +24,8 @@ public class Profile {
     @Indexed(unique = true)
     private String idLink;
 
+    private MediaContainer profileImage;
+    private MediaContainer coverImage;
     private ProfileContainer profileContainer;
     private List<SocialContainer> socials;
     private List<ContactContainer> contacts;
