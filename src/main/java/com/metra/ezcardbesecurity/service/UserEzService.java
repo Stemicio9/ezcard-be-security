@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -52,4 +53,17 @@ public class UserEzService {
     }
 
 
+    public UserEz updateUser(UserEz updateEzRequest) {
+        Optional<UserEz> opt = userEzRepository.findById(updateEzRequest.getId());
+        if (opt.isPresent()) {
+            UserEz userEz = opt.get();
+            userEz.setUsername(updateEzRequest.getUsername());
+            userEz.setEmail(updateEzRequest.getEmail());
+            userEz.setAuthorities(updateEzRequest.getAuthorities());
+            return userEzRepository.save(userEz);
+        }else{
+            log.error("User not found");
+            return null;
+        }
+    }
 }

@@ -2,7 +2,9 @@ package com.metra.ezcardbesecurity.utils;
 
 public class ProfilePaths {
 
-    private ProfilePaths() {}
+    private ProfilePaths() {
+    }
+
     private static final String PROTECTED_BASE_PATH = "protected/profile";
     private static final String PUBLIC_BASE_PATH = "public/profile";
     private static final String GET_PROFILE = PROTECTED_BASE_PATH + "/get";
@@ -10,7 +12,7 @@ public class ProfilePaths {
     private static final String UPDATE_PROFILE = PROTECTED_BASE_PATH + "/update";
 
 
-
+    public static final String CHANGE_USER_STATUS = PROTECTED_BASE_PATH + "/change-user-status";
     public static final String UPDATE_PROFILE_CONTAINER = UPDATE_PROFILE + "/profile";
     public static final String UPDATE_MEDIA = UPDATE_PROFILE + "/media";
     public static final String UPDATE_CONTACTS = UPDATE_PROFILE + "/contacts";
@@ -25,11 +27,6 @@ public class ProfilePaths {
 
     public static final String SERVE_FILE = GET_PROFILE + "/file";
     public static final String GET_PROFILE_SHOWN = GET_PROFILE_PUBLIC + "/profile-shown/{id}";
-
-
-
-
-
 
 
 }

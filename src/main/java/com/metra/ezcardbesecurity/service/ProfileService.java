@@ -1,7 +1,9 @@
 package com.metra.ezcardbesecurity.service;
 
+import com.metra.ezcardbesecurity.entity.UserEz;
 import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.respository.ProfileRepository;
+import com.metra.ezcardbesecurity.respository.UserEzRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ProfileService {
+    private final UserEzRepository userEzRepository;
 
     private final ProfileRepository profileRepository;
     private final FtpService ftpService;
 
-    public ProfileService(ProfileRepository profileRepository, FtpService ftpService) {
+    public ProfileService(ProfileRepository profileRepository, FtpService ftpService,
+                          UserEzRepository userEzRepository) {
         this.profileRepository = profileRepository;
         this.ftpService = ftpService;
+        this.userEzRepository = userEzRepository;
     }
 
     public Profile insertProfile(String username) {
@@ -251,4 +256,16 @@ public class ProfileService {
     }
 
 
+    public UserEz changeUserStatus(String id) {
+        UserEz userEz = userEzRepository.findById(id).orElse(null);
+        if (userEz == null) {
+            log.error("Profile for user with id {} does not exist", id);
+            return null;
+        } else {
+            userEz.setEnabled(!userEz.isEnabled());
+            userEzRepository.save(userEz);
+            log.info("Profile for user with id {} updated", id);
+            return userEz;
+        }
+    }
 }

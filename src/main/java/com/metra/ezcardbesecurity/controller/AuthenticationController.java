@@ -1,11 +1,11 @@
 package com.metra.ezcardbesecurity.controller;
 
+import com.metra.ezcardbesecurity.entity.UserEz;
 import com.metra.ezcardbesecurity.response.JwtAuthenticationResponse;
 import com.metra.ezcardbesecurity.security.JwtAuthenticationRequest;
 import com.metra.ezcardbesecurity.security.JwtTokenUtil;
 import com.metra.ezcardbesecurity.service.UserEzService;
 import com.metra.ezcardbesecurity.utils.ResponseWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -81,7 +81,20 @@ public class AuthenticationController {
     public ResponseEntity<ResponseWrapper> listUsers() {
         return ResponseWrapper.format(
                 "list users",
-                () -> userEzService.findAll()
+                userEzService::findAll
         );
     }
+
+
+    @PostMapping(value = "protected/update-admin")
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserEz updateEzRequest){
+        return ResponseWrapper.format(
+                "update user info",
+                ()-> userEzService.updateUser(updateEzRequest)
+        );
+    }
+
+
+
+
 }

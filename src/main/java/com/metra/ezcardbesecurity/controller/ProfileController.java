@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 public class ProfileController {
 
-
     private final ProfileService profileService;
     private final FtpService ftpService;
 
@@ -84,6 +83,11 @@ public class ProfileController {
     @GetMapping(ProfilePaths.GET_PROFILE_SHOWN)
     public ResponseEntity<?> getProfileShown(@PathVariable("id") String id) {
         return ResponseEntity.ok(profileService.getProfileShown(id));
+    }
+
+    @GetMapping(ProfilePaths.CHANGE_USER_STATUS+"/{id}")
+    public ResponseEntity<?> changeUserStatus(@PathVariable("id") String id) {
+        return ResponseEntity.ok(profileService.changeUserStatus(id));
     }
 
 
