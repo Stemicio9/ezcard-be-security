@@ -6,6 +6,7 @@ import com.metra.ezcardbesecurity.entity.UserEz;
 import com.metra.ezcardbesecurity.respository.UserEzRepository;
 import com.metra.ezcardbesecurity.security.JwtAuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class UserEzService {
+
+    @Value("${ezprofile.url")
+    private String ezProfileUrl;
 
     private final UserEzRepository userEzRepository;
     private final ProfileService profileService;
@@ -65,5 +69,22 @@ public class UserEzService {
             log.error("User not found");
             return null;
         }
+    }
+
+    public UserEz createUser(UserEz updateEzRequest) {
+        UserEz userEz = new UserEz();
+        userEz.setUsername(updateEzRequest.getUsername());
+        userEz.setPassword(passwordEncoder.encode(updateEzRequest.getUsername())); //TODO password as username
+        userEz.setEmail(updateEzRequest.getEmail());
+        userEz.setAuthorities(updateEzRequest.getAuthorities());
+        userEz.setEnabled(true);
+        profileService.insertProfile(updateEzRequest.getUsername());
+        return userEzRepository.save(userEz);
+    }
+
+    public String generateLinkForQrCode(String username) {
+        String id = profileService.getIdProfileFromUsername(username);
+        return ezProfileUrl + "profile?id=" + id;
+        //return "http://localhost:8080/public/register?username=" + username;
     }
 }

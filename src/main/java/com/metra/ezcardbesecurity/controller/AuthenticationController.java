@@ -94,6 +94,14 @@ public class AuthenticationController {
         );
     }
 
+    @PostMapping(value = "protected/create-user")
+    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserEz updateEzRequest){
+        return ResponseWrapper.format(
+                "create user",
+                ()-> userEzService.createUser(updateEzRequest)
+        );
+    }
+
 
 
 

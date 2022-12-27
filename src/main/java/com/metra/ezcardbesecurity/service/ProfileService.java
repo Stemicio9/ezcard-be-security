@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,6 +38,7 @@ public class ProfileService {
         } else {
             Profile profile = new Profile();
             profile = initializeProfile(profile, username);
+
             log.info("Creating profile for user {}", profile.getUsername());
             return profileRepository.insert(profile);
         }
@@ -139,7 +141,6 @@ public class ProfileService {
         }
     }
 
-
     public List<MediaContainer> updateMedia(MultipartFile[] files, String username, String type) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
         if (profile == null) {
@@ -229,7 +230,17 @@ public class ProfileService {
         profile.setGallery(new ArrayList<>());
         profile.setPartner(new ArrayList<>());
         profile.setPresentation(new ArrayList<>());
+        profile.setIdLink(generateUniqueID());
         return profile;
+    }
+
+    private String generateUniqueID() {
+        Random random = new Random();
+        String id = String.format("%04d", random.nextInt(10000));
+        while (profileRepository.findByIdLink(id).isPresent()) {
+            id = String.format("%04d", random.nextInt(10000));
+        }
+        return id;
     }
 
     private Profile setMedia(String username, String type, Profile profile, List<MediaContainer> mediaContainerResponse) {
@@ -266,6 +277,17 @@ public class ProfileService {
             userEzRepository.save(userEz);
             log.info("Profile for user with id {} updated", id);
             return userEz;
+        }
+    }
+
+    public String getIdProfileFromUsername(String username) {
+        Profile profile = profileRepository.findByUsername(username).orElse(null);
+        if (profile == null) {
+            log.error("Profile for user with username {} does not exist", username);
+            return null;
+        } else {
+            log.info("Profile for user with username {} retrieved", username);
+            return profile.getIdLink();
         }
     }
 }
