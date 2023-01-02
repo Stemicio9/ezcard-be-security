@@ -33,6 +33,11 @@ public class AuthenticationController {
         this.userEzService = userEzService;
     }
 
+    @GetMapping(value = "public/test")
+    public ResponseEntity<ResponseWrapper> test() {
+        return ResponseWrapper.format("test", ()-> "test");
+    }
+
     @PostMapping(value = "public/login")
     public ResponseEntity<ResponseWrapper> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
                                                                      HttpServletResponse response) {
@@ -87,22 +92,20 @@ public class AuthenticationController {
 
 
     @PostMapping(value = "protected/update-admin")
-    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserEz updateEzRequest){
+    public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserEz updateEzRequest) {
         return ResponseWrapper.format(
                 "update user info",
-                ()-> userEzService.updateUser(updateEzRequest)
+                () -> userEzService.updateUser(updateEzRequest)
         );
     }
 
     @PostMapping(value = "protected/create-user")
-    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserEz updateEzRequest){
+    public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserEz updateEzRequest) {
         return ResponseWrapper.format(
                 "create user",
-                ()-> userEzService.createUser(updateEzRequest)
+                () -> userEzService.createUser(updateEzRequest)
         );
     }
-
-
 
 
 }

@@ -11,9 +11,10 @@
 
     <groupId>com.metra</groupId>
     <artifactId>ezcard-be-security</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>ezcard-be-security</name>
-    <description>ezcard-be-security</description>
+    <description>Ezcard BE project with security options</description>
+    <packaging>war</packaging>
 
     <properties>
         <java.version>8</java.version>
@@ -97,10 +98,24 @@
             <version>3.4.0</version>
         </dependency>
 
+        <!-- API, java.xml.bind module -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
 
     </dependencies>
 
     <build>
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -34,9 +34,11 @@ public class FtpClient {
         ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.err)));
 
         ftp.connect(server, port);
+        //localPassiveMode is used with localhost, if the ftp is in other server different from localhost, use ftp.enterRemotePassiveMode();
+        ftp.enterRemotePassiveMode();
         ftp.login(user, password);
-        ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
-        ftp.enterLocalPassiveMode();
+        // ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+        ftp.setConnectTimeout(20000);
 
         int reply = ftp.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {

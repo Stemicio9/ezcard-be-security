@@ -93,6 +93,7 @@ public class FtpService {
                 }
                 length += readCount;
             }
+            ftpClient.close();
             return result;
         } catch (IOException e) {
             e.printStackTrace();
