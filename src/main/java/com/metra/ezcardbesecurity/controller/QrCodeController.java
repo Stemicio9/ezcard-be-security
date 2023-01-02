@@ -17,7 +17,7 @@ public class QrCodeController {
 
     @GetMapping(value = "protected/qrcode/{username}", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] getQrCode(@PathVariable String username) {
-        try{
+        try {
             String text = userEzService.generateLinkForQrCode(username);
             return QRCodeGenerator.getQRCodeImage(text, 512, 512);
         } catch (Exception e) {

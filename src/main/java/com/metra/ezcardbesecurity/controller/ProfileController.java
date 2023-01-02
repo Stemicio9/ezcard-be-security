@@ -3,6 +3,7 @@ package com.metra.ezcardbesecurity.controller;
 import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.service.FtpService;
 import com.metra.ezcardbesecurity.service.ProfileService;
+import com.metra.ezcardbesecurity.service.UserEzService;
 import com.metra.ezcardbesecurity.service.filesystem.FileHandlerService;
 import com.metra.ezcardbesecurity.utils.ProfilePaths;
 import org.springframework.http.MediaType;
@@ -18,11 +19,13 @@ public class ProfileController {
 
     private final ProfileService profileService;
     private final FileHandlerService fileHandlerService;
+    private final UserEzService userEzService;
     private final FtpService ftpService;
 
-    public ProfileController(ProfileService profileService, FileHandlerService fileHandlerService, FtpService ftpService) {
+    public ProfileController(ProfileService profileService, FileHandlerService fileHandlerService, UserEzService userEzService, FtpService ftpService) {
         this.profileService = profileService;
         this.fileHandlerService = fileHandlerService;
+        this.userEzService = userEzService;
         this.ftpService = ftpService;
     }
 
@@ -93,6 +96,11 @@ public class ProfileController {
     @GetMapping(ProfilePaths.CHANGE_USER_STATUS+"/{id}")
     public ResponseEntity<?> changeUserStatus(@PathVariable("id") String id) {
         return ResponseEntity.ok(profileService.changeUserStatus(id));
+    }
+
+    @GetMapping(value = "/protected/profile-link/{username}")
+    public ResponseEntity<?> getProfileLink(@PathVariable("username") String username) {
+        return ResponseEntity.ok(userEzService.generateLinkForQrCode(username));
     }
 
 

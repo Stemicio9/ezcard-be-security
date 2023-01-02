@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 public class UserEzService {
 
-    @Value("${ezprofile.url")
+    @Value("${ezprofile.url}")
     private String ezProfileUrl;
 
     private final UserEzRepository userEzRepository;
@@ -84,7 +84,7 @@ public class UserEzService {
 
     public String generateLinkForQrCode(String username) {
         String id = profileService.getIdProfileFromUsername(username);
-        return ezProfileUrl + "profile?id=" + id;
+        return ezProfileUrl + "#/profile?id=" + id;
         //return "http://localhost:8080/public/register?username=" + username;
     }
 }
