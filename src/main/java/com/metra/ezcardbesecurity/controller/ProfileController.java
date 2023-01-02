@@ -3,6 +3,7 @@ package com.metra.ezcardbesecurity.controller;
 import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.service.FtpService;
 import com.metra.ezcardbesecurity.service.ProfileService;
+import com.metra.ezcardbesecurity.service.filesystem.FileHandlerService;
 import com.metra.ezcardbesecurity.utils.ProfilePaths;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import java.util.List;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final FileHandlerService fileHandlerService;
     private final FtpService ftpService;
 
-    public ProfileController(ProfileService profileService, FtpService ftpService) {
+    public ProfileController(ProfileService profileService, FileHandlerService fileHandlerService, FtpService ftpService) {
         this.profileService = profileService;
+        this.fileHandlerService = fileHandlerService;
         this.ftpService = ftpService;
     }
 
@@ -47,6 +50,7 @@ public class ProfileController {
     public ResponseEntity<?> updateGallery(Authentication authentication,
                                            @RequestParam(value = "files", required = false) MultipartFile[] files,
                                            @RequestParam(value = "type") String type) {
+        //return ResponseEntity.ok(profileService.updateMedia(files, authentication.getName(), type));
         return ResponseEntity.ok(profileService.updateMedia(files, authentication.getName(), type));
     }
 
@@ -77,7 +81,8 @@ public class ProfileController {
 
     @PostMapping(ProfilePaths.SERVE_FILE)
     public ResponseEntity<?> serveFile(@RequestBody MediaContainer mediaContainer) {
-        return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getLink()));
+        //return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getLink()));
+        return ResponseEntity.ok(fileHandlerService.getFile(mediaContainer.getLink()));
     }
 
     @GetMapping(ProfilePaths.GET_PROFILE_SHOWN)

@@ -4,6 +4,7 @@ import com.metra.ezcardbesecurity.entity.UserEz;
 import com.metra.ezcardbesecurity.entity.profile.*;
 import com.metra.ezcardbesecurity.respository.ProfileRepository;
 import com.metra.ezcardbesecurity.respository.UserEzRepository;
+import com.metra.ezcardbesecurity.service.filesystem.FileHandlerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,14 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final FtpService ftpService;
+    private final FileHandlerService fileHandlerService;
 
     public ProfileService(ProfileRepository profileRepository, FtpService ftpService,
-                          UserEzRepository userEzRepository) {
+                          UserEzRepository userEzRepository, FileHandlerService fileHandlerService) {
         this.profileRepository = profileRepository;
         this.ftpService = ftpService;
         this.userEzRepository = userEzRepository;
+        this.fileHandlerService = fileHandlerService;
     }
 
     public Profile insertProfile(String username) {
@@ -150,7 +153,9 @@ public class ProfileService {
             List<MediaContainer> mediaContainerResponse = new ArrayList<>();
             if (files != null && files.length > 0) {
                 try {
-                    List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
+                    //todo this comment is for ftp implementation otherwise we are using filesystem storage
+                    // List<String> links = ftpService.uploadFiles(files, profile.getId(), type);
+                    List<String> links = fileHandlerService.uploadFiles(files, profile.getId(), type);
                     for (int i = 0; i < files.length; i++) {
                         MediaContainer mediaContainer = new MediaContainer();
                         mediaContainer.setName(files[i].getOriginalFilename());
@@ -215,7 +220,6 @@ public class ProfileService {
             return profile;
         }
     }
-
 
     private String profileNotFoundErrorMessage(String username) {
         return "Profile for user " + username + " does not exist";
