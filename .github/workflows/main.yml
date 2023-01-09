@@ -2,7 +2,7 @@ name: deploy
 on:
   push:
     branches:
-      - master
+      - save_disk
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
