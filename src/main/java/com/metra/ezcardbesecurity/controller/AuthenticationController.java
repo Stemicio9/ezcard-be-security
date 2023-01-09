@@ -35,7 +35,7 @@ public class AuthenticationController {
 
     @GetMapping(value = "public/test")
     public ResponseEntity<ResponseWrapper> test() {
-        return ResponseWrapper.format("test", ()-> "test");
+        return ResponseWrapper.format("test", ()-> "Ciao provo a fare una chiamata");
     }
 
     @PostMapping(value = "public/login")
