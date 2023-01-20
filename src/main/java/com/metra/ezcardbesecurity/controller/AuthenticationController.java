@@ -1,6 +1,8 @@
 package com.metra.ezcardbesecurity.controller;
 
 import com.metra.ezcardbesecurity.entity.UserEz;
+import com.metra.ezcardbesecurity.request.ForgotPasswordRequest;
+import com.metra.ezcardbesecurity.request.ResetPasswordRequest;
 import com.metra.ezcardbesecurity.response.JwtAuthenticationResponse;
 import com.metra.ezcardbesecurity.security.JwtAuthenticationRequest;
 import com.metra.ezcardbesecurity.security.JwtTokenUtil;
@@ -104,6 +106,23 @@ public class AuthenticationController {
         return ResponseWrapper.format(
                 "create user",
                 () -> userEzService.createUser(updateEzRequest)
+        );
+    }
+
+
+    @PostMapping(value = "public/forgot-password")
+    public ResponseEntity<ResponseWrapper> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        return ResponseWrapper.format(
+                "forgot password",
+                () -> userEzService.forgotPassword(forgotPasswordRequest)
+        );
+    }
+
+    @PostMapping(value = "public/reset-password")
+    public ResponseEntity<ResponseWrapper> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return ResponseWrapper.format(
+                "reset password",
+                () -> userEzService.resetPassword(resetPasswordRequest)
         );
     }
 

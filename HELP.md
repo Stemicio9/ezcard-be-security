@@ -12,7 +12,7 @@ This readme describes how to deploy a Tomcat project in a Docker container.
 
   ```docker run -itd -p 8888:8080 -v /home/tomcat_content/ --name tomcat_ezcard tomcat:9.0```
 
-- Execute followinf commands in order to enable manager gui
+- Execute following commands in order to enable manager gui
     
   ```docker exec -it tomcat_ezcard /bin/bash```  
   ```mv webapps webapps2```  

@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface UserEzRepository extends MongoRepository<UserEz, String> {
     Optional<UserEz> findByUsername(String username);
 
+    Optional<UserEz> findByEmail(String email);
+
 
 }
