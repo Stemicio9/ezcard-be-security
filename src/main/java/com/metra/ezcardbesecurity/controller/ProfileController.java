@@ -82,6 +82,11 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getMedia(authentication.getName(), type));
     }
 
+    @GetMapping(ProfilePaths.GET_MEDIA_SECOND)
+    public ResponseEntity<?> getMediaSecond(@RequestParam(value = "type") String type, @RequestParam(value = "id") String id) {
+        return ResponseEntity.ok(profileService.getMediaSecond(type, id));
+    }
+
     @PostMapping(ProfilePaths.SERVE_FILE)
     public ResponseEntity<?> serveFile(@RequestBody MediaContainer mediaContainer) {
         //return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getLink()));

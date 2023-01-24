@@ -21,6 +21,7 @@ public class ProfilePaths {
 
     public static final String GET_PROFILE_CONTAINER = GET_PROFILE + "/profile";
     public static final String GET_MEDIA = GET_PROFILE + "/media";
+    public static final String GET_MEDIA_SECOND = GET_PROFILE_PUBLIC + "/media";
     public static final String GET_CONTACTS = GET_PROFILE + "/contacts";
     public static final String GET_COMPANIES = GET_PROFILE + "/companies";
     public static final String GET_SOCIAL = GET_PROFILE + "/social";

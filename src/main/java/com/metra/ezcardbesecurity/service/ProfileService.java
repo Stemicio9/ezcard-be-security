@@ -181,6 +181,10 @@ public class ProfileService {
 
     public List<MediaContainer> getMedia(String username, String type) {
         Profile profile = profileRepository.findByUsername(username).orElse(null);
+        return getMediaContainers(username, type, profile);
+    }
+
+    private List<MediaContainer> getMediaContainers(String username, String type, Profile profile) {
         if (profile == null) {
             log.error(profileNotFoundErrorMessage(username));
             return Collections.emptyList();
@@ -293,5 +297,10 @@ public class ProfileService {
             log.info("Profile for user with username {} retrieved", username);
             return profile.getIdLink();
         }
+    }
+
+    public Object getMediaSecond(String type, String id) {
+        Profile profile = profileRepository.findById(id).orElse(null);
+        return getMediaContainers(profile.getUsername(), type, profile);
     }
 }
