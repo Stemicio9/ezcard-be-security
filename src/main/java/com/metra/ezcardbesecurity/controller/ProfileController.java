@@ -93,6 +93,12 @@ public class ProfileController {
         return ResponseEntity.ok(fileHandlerService.getFile(mediaContainer.getLink()));
     }
 
+    @PostMapping(ProfilePaths.SERVE_FILE_SECOND)
+    public ResponseEntity<?> serveFileSecond(@RequestBody MediaContainer mediaContainer) {
+        //return ResponseEntity.ok(ftpService.serveFile(mediaContainer.getLink()));
+        return ResponseEntity.ok(fileHandlerService.getFile(mediaContainer.getLink()));
+    }
+
     @GetMapping(ProfilePaths.GET_PROFILE_SHOWN)
     public ResponseEntity<?> getProfileShown(@PathVariable("id") String id) {
         return ResponseEntity.ok(profileService.getProfileShown(id));

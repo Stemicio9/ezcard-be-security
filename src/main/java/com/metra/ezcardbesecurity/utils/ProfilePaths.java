@@ -27,6 +27,7 @@ public class ProfilePaths {
     public static final String GET_SOCIAL = GET_PROFILE + "/social";
 
     public static final String SERVE_FILE = GET_PROFILE + "/file";
+    public static final String SERVE_FILE_SECOND = GET_PROFILE_PUBLIC + "/file";
     public static final String GET_PROFILE_SHOWN = GET_PROFILE_PUBLIC + "/profile-shown/{id}";
 
 
