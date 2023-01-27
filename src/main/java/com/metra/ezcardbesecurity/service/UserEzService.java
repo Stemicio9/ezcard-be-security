@@ -83,6 +83,7 @@ public class UserEzService {
         userEz.setPassword(passwordEncoder.encode(updateEzRequest.getUsername())); //TODO password as username
         userEz.setEmail(updateEzRequest.getEmail());
         userEz.setAuthorities(updateEzRequest.getAuthorities());
+        userEz.setGifted(updateEzRequest.isGifted() ? updateEzRequest.isGifted() : false);
         userEz.setEnabled(true);
         profileService.insertProfile(updateEzRequest.getUsername());
         return userEzRepository.save(userEz);

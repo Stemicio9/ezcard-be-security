@@ -20,7 +20,6 @@ public class UserEz implements Serializable {
     private String password;
     private String email;
     private boolean enabled;
-
     private boolean gifted;
     private Set<Authority> authorities;
 
